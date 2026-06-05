@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } from 'typeorm';
+import { Grass } from '../../grass/entities/grass.entity';
 
 @Entity()
 export class User {
@@ -22,4 +23,7 @@ export class User {
 
   @CreateDateColumn()
   createdAt!: Date;
+
+  @OneToMany(() => Grass, (grass) => grass.owner)
+  grasses!: Grass[];
 }

@@ -18,10 +18,12 @@ import { GrassService } from './grass.service';
 import { GrassController } from './grass.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Grass } from './entities/grass.entity';
+import { User } from '../users/entities/user.entity';
 
 @Module({
   controllers: [GrassController],
   providers: [GrassService],
-  imports: [TypeOrmModule.forFeature([Grass])],
+  imports: [TypeOrmModule.forFeature([Grass, User])],
+  exports: [TypeOrmModule],
 })
 export class GrassModule {}
