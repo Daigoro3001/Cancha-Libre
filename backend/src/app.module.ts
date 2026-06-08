@@ -4,6 +4,8 @@ import { GrassModule } from './grass/grass.module';
 import { FieldsModule } from './fields/fields.module';
 import { ReservationsModule } from './reservations/reservations.module';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
+
 
 @Module({
   imports: [
@@ -18,6 +20,7 @@ import { UsersModule } from './users/users.module';
     FieldsModule,
     ReservationsModule,
     UsersModule,
+    AuthModule,
   ],
 })
 export class AppModule {}

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Grass } from './entities/grass.entity';
@@ -12,8 +12,11 @@ export class GrassService {
     private readonly grassRepository: Repository<Grass>,
   ) {}
 
-  async create(createGrassDto: CreateGrassDto): Promise<Grass> {
-    const grass = this.grassRepository.create(createGrassDto);
+  async create(createGrassDto: CreateGrassDto, ownerId: number): Promise<Grass> {
+    const grass = this.grassRepository.create({
+      ...createGrassDto,
+      owner: { id: ownerId },
+    });
     return await this.grassRepository.save(grass);
   }
 
@@ -23,10 +26,17 @@ export class GrassService {
     });
   }
 
+  async findByOwner(ownerId: number): Promise<Grass[]> {
+    return await this.grassRepository.find({
+      where: { owner: { id: ownerId } },
+      relations: ['fields'],
+    });
+  }
+
   async findOne(id: number): Promise<Grass> {
     const grass = await this.grassRepository.findOne({
       where: { id },
-      relations: ['fields'],
+      relations: ['fields', 'owner'],
     });
     if (!grass) {
       throw new NotFoundException(`Grass con id ${id} no encontrado`);
@@ -34,14 +44,20 @@ export class GrassService {
     return grass;
   }
 
-  async update(id: number, updateGrassDto: UpdateGrassDto): Promise<Grass> {
+  async update(id: number, updateGrassDto: UpdateGrassDto, ownerId: number): Promise<Grass> {
     const grass = await this.findOne(id);
+    if (grass.owner?.id !== ownerId) {
+      throw new ForbiddenException('No tienes permiso para editar este grass');
+    }
     Object.assign(grass, updateGrassDto);
     return await this.grassRepository.save(grass);
   }
 
-  async remove(id: number): Promise<{ message: string }> {
+  async remove(id: number, ownerId: number): Promise<{ message: string }> {
     const grass = await this.findOne(id);
+    if (grass.owner?.id !== ownerId) {
+      throw new ForbiddenException('No tienes permiso para eliminar este grass');
+    }
     await this.grassRepository.remove(grass);
     return { message: `Grass con id ${id} eliminado correctamente` };
   }
