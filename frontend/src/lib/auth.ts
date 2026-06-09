@@ -1,3 +1,5 @@
+import Cookies from 'js-cookie';
+
 const TOKEN_KEY = 'cancha_libre_token';
 const USER_KEY = 'cancha_libre_user';
 
@@ -9,13 +11,13 @@ export interface AuthUser {
 
 export function saveAuth(token: string, user: AuthUser) {
   if (typeof window === 'undefined') return;
-  localStorage.setItem(TOKEN_KEY, token);
+  Cookies.set(TOKEN_KEY, token, { expires: 7 });
   localStorage.setItem(USER_KEY, JSON.stringify(user));
 }
 
 export function getToken(): string | null {
   if (typeof window === 'undefined') return null;
-  return localStorage.getItem(TOKEN_KEY);
+  return Cookies.get(TOKEN_KEY) || null;
 }
 
 export function getUser(): AuthUser | null {
@@ -31,7 +33,7 @@ export function getUser(): AuthUser | null {
 
 export function clearAuth() {
   if (typeof window === 'undefined') return;
-  localStorage.removeItem(TOKEN_KEY);
+  Cookies.remove(TOKEN_KEY);
   localStorage.removeItem(USER_KEY);
 }
 

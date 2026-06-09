@@ -23,3 +23,13 @@ export async function fetchReservationsByFieldAndDate(fieldId: number, date: str
   if (!res.ok) throw new Error('Error al obtener las reservas');
   return res.json();
 }
+
+export async function fetchMyGrass(token: string) {
+  const res = await fetch(`${API_URL}/grass/my`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!res.ok) throw new Error('Error al obtener tus grass');
+  return res.json();
+}
