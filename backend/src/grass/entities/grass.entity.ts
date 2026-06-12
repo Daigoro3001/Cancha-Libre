@@ -19,6 +19,12 @@ export class Grass {
   @Column({ nullable: true })
   description!: string;
 
+  @Column({ default: '08:00' })
+  openTime!: string;
+
+  @Column({ default: '22:00' })
+  closeTime!: string;
+
   @ManyToOne(() => User, (user) => user.grasses, { nullable: true })
   @JoinColumn({ name: 'owner_id' })
   owner!: User;

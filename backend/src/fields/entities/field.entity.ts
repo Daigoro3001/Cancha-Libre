@@ -13,8 +13,17 @@ export class Field {
   @Column({ nullable: true })
   description!: string;
 
-  @Column('decimal', { precision: 10, scale: 2 })
+  @Column('decimal', { precision: 10, scale: 2, nullable: true })
   pricePerHour!: number;
+
+  @Column('decimal', { precision: 10, scale: 2, nullable: true })
+  dayPrice!: number;
+
+  @Column('decimal', { precision: 10, scale: 2, nullable: true })
+  nightPrice!: number;
+
+  @Column({ nullable: true })
+  nightStartTime!: string;
 
   @Column({ default: true })
   isActive!: boolean;
